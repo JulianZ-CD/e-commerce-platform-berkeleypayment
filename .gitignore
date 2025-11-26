@@ -57,4 +57,4 @@ Thumbs.db
 alembic/versions/__pycache__/
 
 # Docs
-pre_*.md
+pre*.md
