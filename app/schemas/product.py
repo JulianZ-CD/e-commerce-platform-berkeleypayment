@@ -16,7 +16,7 @@ class ProductBase(BaseModel):
     """
     name: str = Field(..., min_length=1, max_length=255, description="Product name")
     description: Optional[str] = Field(None, description="Product description")
-    price: Decimal = Field(..., gt=0, decimal_places=2, description="Product price (must be > 0)")
+    price: Decimal = Field(..., gt=0, description="Product price (must be > 0)")
     quantity: int = Field(..., ge=0, description="Stock quantity (must be >= 0)")
 
 
@@ -49,7 +49,7 @@ class ProductUpdate(BaseModel):
     """
     name: Optional[str] = Field(None, min_length=1, max_length=255)
     description: Optional[str] = None
-    price: Optional[Decimal] = Field(None, gt=0, decimal_places=2)
+    price: Optional[Decimal] = Field(None, gt=0)
     quantity: Optional[int] = Field(None, ge=0)
 
 
