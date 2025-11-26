@@ -54,8 +54,10 @@ async def health_check():
     return {"status": "healthy"}
 
 
-# Router registration will be added here as we implement endpoints
-# app.include_router(products.router, prefix="/api", tags=["Products"])
+# Router registration
+from app.routers import product_router
+
+app.include_router(product_router.router, prefix="/api", tags=["Products"])
 # app.include_router(orders.router, prefix="/api", tags=["Orders"])
 # app.include_router(webhooks.router, prefix="/api", tags=["Webhooks"])
 
