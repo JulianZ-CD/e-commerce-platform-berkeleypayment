@@ -55,9 +55,9 @@ async def health_check():
 
 
 # Router registration
-from app.routers import product_router, order_router
+from app.routers import product_router, order_router, webhook_router
 
 app.include_router(product_router.router, prefix="/api", tags=["Products"])
 app.include_router(order_router.router, prefix="/api", tags=["Orders"])
-# app.include_router(webhooks.router, prefix="/api", tags=["Webhooks"])
+app.include_router(webhook_router.router, prefix="/api", tags=["Webhooks"])
 
