@@ -115,8 +115,19 @@ e-commerce-platform/
 
 ### Start the Application
 
+**Option 1: Use Pre-built Image (Recommended)**
+
 ```bash
-# Clone and start
+# Clone and start with remote image
+git clone <repository-url>
+cd e-commerce-platform-berkeleypayment
+make up-remote
+```
+
+**Option 2: Build Locally**
+
+```bash
+# Clone and build from source
 git clone <repository-url>
 cd e-commerce-platform-berkeleypayment
 make up
@@ -243,12 +254,28 @@ python -m pytest tests/ -v
 ## Available Commands
 
 ```bash
-make help       # Show all commands
-make up         # Start services
+# Quick Start
+make up         # Start services (build locally)
+make up-remote  # Start services (use pre-built image)
 make down       # Stop services
+
+# Development
+make dev        # Start local development
 make logs       # View logs
-make test       # Run tests
+make restart    # Restart services
+
+# Testing
+make test       # Run all tests
+make test-unit  # Run unit tests only
+make test-int   # Run integration tests only
+
+# Deployment
+make pull-image # Pull pre-built image
+make push       # Build & push multi-platform images
+
+# Maintenance
 make clean      # Clean everything
+make help       # Show all commands
 ```
 
 For local development without Docker:
