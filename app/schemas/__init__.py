@@ -16,6 +16,10 @@ from app.schemas.order import (
     OrderItemCreate,
     OrderItemResponse
 )
+from app.schemas.webhook import (
+    PaymentWebhookPayload,
+    WebhookResponse
+)
 
 __all__ = [
     "ProductCreate",
@@ -28,4 +32,6 @@ __all__ = [
     "OrderStatusUpdate",
     "OrderItemCreate",
     "OrderItemResponse",
+    "PaymentWebhookPayload",
+    "WebhookResponse",
 ]
