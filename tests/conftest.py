@@ -1,6 +1,10 @@
 """
 Pytest configuration and shared fixtures.
 Provides test database, client, and common test data.
+
+Note: Tests use a separate PostgreSQL database (ecommerce_test_db).
+The database is automatically created if it doesn't exist.
+Requires PostgreSQL container to be running (docker-compose up postgres).
 """
 import pytest
 from sqlalchemy import create_engine
@@ -12,7 +16,8 @@ from app.database import Base, get_db
 from app.models import Product, Order, OrderItem
 
 
-# Test database URL (uses separate database for testing)
+# Test database URL (uses separate PostgreSQL database for testing)
+# Tables are created/dropped for each test function to ensure isolation
 TEST_DATABASE_URL = "postgresql://ecommerce_user:ecommerce_pass@localhost:5432/ecommerce_test_db"
 
 
