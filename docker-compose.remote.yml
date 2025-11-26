@@ -1,0 +1,8 @@
+# Override configuration for using pre-built remote image
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.remote.yml up -d
+
+services:
+  api:
+    image: ${COMPOSE_IMAGE:-ghcr.io/julianz-cd/e-commerce-platform-api:latest}
+    build: null  # Disable local build
+

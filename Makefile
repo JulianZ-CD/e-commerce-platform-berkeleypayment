@@ -1,10 +1,16 @@
 # Makefile for E-commerce API
 # One-stop solution for all development operations
 
-.PHONY: help build up down logs test clean restart init-db dev check-docker create-testdb
+.PHONY: help build up down logs test clean restart init-db dev check-docker create-testdb push setup-buildx
 
 # Default target - show help
 .DEFAULT_GOAL := help
+
+# Configuration
+REGISTRY := ghcr.io
+IMAGE_NAME := julianz-cd/e-commerce-platform-api
+IMAGE_TAG := latest
+PLATFORMS := linux/amd64,linux/arm64
 
 help: ## Show this help message
 	@echo "╔══════════════════════════════════════════════════════╗"
@@ -27,6 +33,12 @@ help: ## Show this help message
 	@echo "  make down       - Stop all services"
 	@echo "  make clean      - Remove containers and volumes"
 	@echo "  make build      - Rebuild Docker images"
+	@echo ""
+	@echo "🚀 Deployment:"
+	@echo "  make setup-buildx - Setup Docker buildx for multi-platform"
+	@echo "  make push       - Build & push multi-platform images to registry"
+	@echo "  make pull-image - Pull pre-built image from registry"
+	@echo "  make up-remote  - Start services using pre-built image (no local build)"
 	@echo ""
 	@echo "📊 Status:"
 	@echo "  make status     - Check service status"
@@ -168,4 +180,70 @@ venv: ## Create Python virtual environment
 install: ## Install Python dependencies
 	@pip install -r requirements.txt
 	@echo "✅ Dependencies installed!"
+
+# Docker buildx for multi-platform builds
+setup-buildx: check-docker ## Setup Docker buildx for multi-platform builds
+	@echo "🔧 Setting up Docker buildx..."
+	@docker buildx create --name ecommerce-builder --use 2>/dev/null || \
+		docker buildx use ecommerce-builder 2>/dev/null || \
+		echo "Buildx builder already exists"
+	@docker buildx inspect --bootstrap
+	@echo "✅ Buildx ready for multi-platform builds!"
+
+push: check-docker ## Build and push multi-platform images to registry
+	@echo "🚀 Building and pushing multi-platform images..."
+	@echo ""
+	@echo "Target platforms: $(PLATFORMS)"
+	@echo "Registry: $(REGISTRY)/$(IMAGE_NAME):$(IMAGE_TAG)"
+	@echo ""
+	@echo "⚠️  Make sure you are logged in to GitHub Container Registry:"
+	@echo "   docker login ghcr.io -u USERNAME"
+	@echo ""
+	@read -p "Press Enter to continue or Ctrl+C to cancel..." dummy
+	@echo ""
+	@echo "🔨 Building for multiple platforms..."
+	@docker buildx build \
+		--platform $(PLATFORMS) \
+		--file Dockerfile \
+		--tag $(REGISTRY)/$(IMAGE_NAME):$(IMAGE_TAG) \
+		--push \
+		.
+	@echo ""
+	@echo "✅ Image pushed successfully!"
+	@echo "   Image: $(REGISTRY)/$(IMAGE_NAME):$(IMAGE_TAG)"
+	@echo "   Platforms: $(PLATFORMS)"
+	@echo ""
+	@echo "To use this image, update docker-compose.yml:"
+	@echo "  image: $(REGISTRY)/$(IMAGE_NAME):$(IMAGE_TAG)"
+	@echo ""
+
+pull-image: check-docker ## Pull pre-built image from registry
+	@echo "📥 Pulling pre-built image from registry..."
+	@echo ""
+	@echo "Image: $(REGISTRY)/$(IMAGE_NAME):$(IMAGE_TAG)"
+	@echo ""
+	@docker pull $(REGISTRY)/$(IMAGE_NAME):$(IMAGE_TAG)
+	@echo ""
+	@echo "✅ Image pulled successfully!"
+	@echo "   You can now use 'make up-remote' to start services"
+	@echo ""
+
+up-remote: check-docker pull-image ## Start services using pre-built image (no local build)
+	@echo "🚀 Starting services with pre-built image..."
+	@echo ""
+	@echo "Using image: $(REGISTRY)/$(IMAGE_NAME):$(IMAGE_TAG)"
+	@echo ""
+	@COMPOSE_IMAGE=$(REGISTRY)/$(IMAGE_NAME):$(IMAGE_TAG) \
+		docker-compose -f docker-compose.yml -f docker-compose.remote.yml up -d
+	@echo ""
+	@echo "✅ Services started!"
+	@echo ""
+	@echo "📍 Access points:"
+	@echo "   API: http://localhost:8000"
+	@echo "   Docs: http://localhost:8000/docs"
+	@echo ""
+	@echo "💡 Tips:"
+	@echo "   - View logs: make logs"
+	@echo "   - Stop services: make down"
+	@echo ""
 
