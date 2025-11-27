@@ -5,12 +5,12 @@ A RESTful API for product management, order processing, and secure payment webho
 ## Features
 
 ### Core Functionality
-- ✅ **Product Management**: Full CRUD operations with inventory tracking
-- ✅ **Order Management**: Multi-product orders with automatic inventory deduction
-- ✅ **Payment Webhooks**: Secure webhook endpoint with HMAC-SHA256 authentication
-- ✅ **State Machine**: Strict order status transitions (pending → completed/canceled)
-- ✅ **Atomic Transactions**: Order creation and inventory updates are atomic
-- ✅ **Comprehensive Testing**: 66 tests covering unit and integration scenarios
+- **Product Management**: Full CRUD operations with inventory tracking
+- **Order Management**: Multi-product orders with automatic inventory deduction
+- **Payment Webhooks**: Secure webhook endpoint with HMAC-SHA256 authentication
+- **State Machine**: Strict order status transitions (pending → completed/canceled)
+- **Atomic Transactions**: Order creation and inventory updates are atomic
+- **Comprehensive Testing**: 66 tests covering unit and integration scenarios
 
 ### API Features
 - Pagination and filtering for list endpoints
